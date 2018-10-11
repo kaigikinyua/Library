@@ -1,4 +1,4 @@
-import MySQLdb,datetime
+import MySQLdb,datetime,random
 class LibRecords:
     #---------------------------database Connection----------------------------------
     #constructor that connects to the database
@@ -12,39 +12,51 @@ class LibRecords:
 
     #-------------------------------user management--------------------------------
     #1.adding a new user params(username,contact,password,accountbalance)
-    def addUser(self):
+    def addUser(self,uname,contact,password):
         #athenticate(usercontact,password);
         try:
             cursor=self.db.cursor()
-            sql="INSERT INTO users (name,contact,password,account) VALUES ('antony','0704273214','antonykaigi',1000)";
+            sql="INSERT INTO users (name,contact,password,account) VALUES ('%s','%s','%s',1000)"%(uname,contact,password);
             cursor.execute(sql);
             self.db.commit()
-            print("User added successfully");
+            return True
         except ():
-            print "Error adding the user";
+            return False
     #2.Deleting a users params (contact)
-    def deleteUser(self):
+    def deleteUser(self,uname,contact,password):
         try:
             cursor=self.db.cursor()
-            sql="DELETE FROM users where contact='0704273214'"
+            sql="DELETE FROM users where contact='%s' and password='%s'"%(contact,password)
             cursor.execute(sql)
             self.db.commit()
-            print "User deleted successfully"
+            return True
         except():
-            print "Error in deleting user"
+            return False
 
 
     #----------------------------------book management --------------------------------------------
     #1.Adding new books params(id,bookname,author,category,copiesbought,copiesavailable)
-    def addBook(self):
+    def addBook(self,bookname,author,category,copies):
         try:
             cursor=self.db.cursor()
-            sql="INSERT INTO Inventory (id,bookname,author,category,copiesbought,copiesavailable) VALUES('james','Fall','johnny','Romance',1,1)"
+            rand=random.randint(1,1000000)
+            check="SELECT * FROM Inventory WHERE id='%s'"%(rand)
+            cursor.execute(check)
+            r=cursor.fetchall()
+            while (len(r)>0):
+                cursor=self.db.cursor()
+                rand=random.randint(1,1000000)
+                check="SELECT * FROM Inventory WHERE id='%s'"%(rand)
+                cursor.execute(check)
+                r=cursor.fetchall()
+                if(len(r)==0):
+                    break;
+            sql="INSERT INTO Inventory (id,bookname,author,category,copiesbought,copiesavailable) VALUES('%s','%s','%s','%s',%d,%d)"%(str(rand),bookname,author,category,int(copies),int(copies))
             cursor.execute(sql);
             self.db.commit()
-            print "Book added successfully"
+            return True
         except():
-            print "Book Not added"
+            return False
     #2.Deleting books
     def deleteBook(self):
         try:
@@ -104,7 +116,18 @@ class LibRecords:
             print "Error returnig Book"
 
 
-l=LibRecords();
+    #--------------------------admin---------------------------------------------
+    #login for admin params(name,password)
+    def adminDetails(self,name,password):
+        cursor=self.db.cursor()
+        sql="SELECT * FROM admin where admin_name='%s'"%(name);
+        cursor.execute(sql)
+        r=cursor.fetchall()
+        if(len(r)==1):
+            return True
+        else:
+            return False
+#l=LibRecords();
 #l.addUser();
 #l.deleteUser();
 #l.addBook();
