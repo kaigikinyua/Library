@@ -1,12 +1,18 @@
 from Tkinter import *
 import tkMessageBox
 from lib_dbase import *
+from PIL import Image,ImageTk
 class Gui():
 #-----admin login-----------------------------------------------------------------
     def __init__(self):
         self.root=Tk()
         self.root.title("Library Management System ")
+        photo=PhotoImage(file=".//pictures//lib.png")
+        bg=Label(self.root,image=photo)
+        bg.pack()
         frame=Frame(self.root)
+        login=Label(frame,text="-----Login------",font="red")
+        login.pack()
         l=Label(frame,text="Username")
         self.username=Entry(frame,width=30)
         l1=Label(frame,text="Password")
@@ -36,10 +42,13 @@ class Gui():
     def mainpage(self):
         mainpage=Tk()
         mainpage.title("Library Management System");
+        photo=PhotoImage(file=".//pictures//shellf.png")
+        lphoto=Label(mainpage,image=photo)
+        lphoto.pack(side=RIGHT)
         menuframe=Frame(mainpage,background="yellow")
         mUsers=Button(menuframe,text="Users",command=self.userMangementPage)
         mBooks=Button(menuframe,text="Books",command=self.bookManageMent)
-        borrow=Button(menuframe,text="Borrow")
+        borrow=Button(menuframe,text="Borrow",command=self.borrowBook)
         rBook=Button(menuframe,text="Return")
         mUsers.pack()
         mBooks.pack()
@@ -118,11 +127,11 @@ class Gui():
         bFrame=Frame(bookp)
 #!!command------
         add=Button(bFrame,text="Add",background='green',command=self.addBook)
-        delete=Button(bFrame,text="Delete",background='red')
+        delete=Button(bFrame,text="Delete",background='red',command=self.deleteBook)
         add.pack(side=RIGHT)
         delete.pack(side=LEFT)
         bFrame.pack(side=BOTTOM)
-        book.mainloop()
+        bookp.mainloop()
     #method for adding books
     def addBook(self):
         l=LibRecords()
@@ -132,5 +141,27 @@ class Gui():
             tkMessageBox.showinfo("Entry Sucess","The Book "+bookname+" has been added successfully")
         else:
             tkMessageBox.showerror("Error ","There was an Error while adding "+bookname)
-#------Borrow Books -----------------------------------------------------------------
+   #deleting a book from the database
+    def deleteBook(self):
+        bookname=self.Book.get();author=self.author.get();category=self.category.get();copies=self.copies.get();
+        l=LibRecords()
+        r=l.deleteBook(bookname,author,category,copies)
+        if(r==True):
+            tkMessageBox.showinfo("Delete success","The Book "+bookname+" has been deleted")
+        elif(r=="Borrowed"):
+            tkMessageBox.showerror("Error","The Book "+bookname+" cannot be deleted\n since it has been borrowed")
+        else:
+            tkMessageBox.showerror("Error","Cannot delete book at this time please contact the system Admin")
+#------Borrow Books ---------------------------------------------------------------
+    def borrowBook(self):
+        window=Tk()
+        window.title("LMS--Borrow Books")
+        l=LibRecords()
+        r=l.displayBooks()
+        books=[];i=0;
+        
+        for i in range(len(r)):
+            books+=[Label(window,text=r[0][1]+" ")]
+            books[i].pack()
+        window.mainloop()
 g=Gui()

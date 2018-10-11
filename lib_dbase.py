@@ -1,14 +1,13 @@
 import MySQLdb,datetime,random
 class LibRecords:
     #---------------------------database Connection----------------------------------
-    #constructor that connects to the database
+#constructor that connects to the database
     def __init__(self):
         try:
             self.db=MySQLdb.connect("localhost","root","root","Library")
             print "Connection success"
         except():
             print "Error connecting to the database"
-
 
     #-------------------------------user management--------------------------------
     #1.adding a new user params(username,contact,password,accountbalance)
@@ -34,7 +33,7 @@ class LibRecords:
             return False
 
 
-    #----------------------------------book management --------------------------------------------
+#----------------------------------book management --------------------------------------------
     #1.Adding new books params(id,bookname,author,category,copiesbought,copiesavailable)
     def addBook(self,bookname,author,category,copies):
         try:
@@ -58,17 +57,30 @@ class LibRecords:
         except():
             return False
     #2.Deleting books
-    def deleteBook(self):
+#little logical bug-------------------
+    #delete a certain book from the database
+    def deleteBook(self,bookname,author,category,copies):
         try:
             cursor=self.db.cursor()
-            sql="DELETE FROM Inventory where id='awfA'"
-            cursor.execute(sql)
-            self.db.commit()
-            print "Book deleted successfully"
+            check="SELECT Copiesbought,CopiesAvailable from Inventory where bookname='%s'"%(bookname)
+            cursor.execute(check)
+            r=cursor.fetchall()
+            if(r[0][0]==r[0][1]):
+                sql="DELETE FROM Inventory where bookname='%s' and Author='%s' and Category='%s' and Copiesbought=%d"%(bookname,author,category,int(copies))
+                cursor.execute(sql)
+                self.db.commit()
+                return True
+            else:
+                return "Borrowed"
         except():
             print "Error in deleting Book"
-
-
+    #displaying all the books
+    def displayBooks(self):
+        cursor=self.db.cursor()
+        sql="SELECT * FROM Inventory where CopiesAvailable>1"
+        cursor.execute(sql)
+        r=cursor.fetchall()
+        return r
     #--------------------------------Borrowing management----------------------------------------
     #1.borrowing books params(idofthebook,userscontact,password,dateborrowed,state)
     def borrow(self):
@@ -116,7 +128,8 @@ class LibRecords:
             print "Error returnig Book"
 
 
-    #--------------------------admin---------------------------------------------
+
+#--------------------------admin---------------------------------------------
     #login for admin params(name,password)
     def adminDetails(self,name,password):
         cursor=self.db.cursor()
