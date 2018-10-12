@@ -159,9 +159,23 @@ class Gui():
         l=LibRecords()
         r=l.displayBooks()
         books=[];i=0;
-        
-        for i in range(len(r)):
-            books+=[Label(window,text=r[0][1]+" ")]
-            books[i].pack()
+#display the books the user wants
+#should be easily selectable and added to users wishlist
+#should not be more than 3 books
+        books=[];j=0;
+        for item in range(len(r)):
+            books+=[r[j][1]+" "+r[j][2]+" "+r[j][3]];j+=1;
+        self.list=Listbox(window);i=0;
+        for item in books:
+            self.list.insert(i,item);i+=1;
+        self.list.pack()
+        mylist=Button(window,text="Borrow",bg="green",command=self.enventBorrow)
+        mylist.pack()
         window.mainloop()
+    #event handler for the Listbox
+    def enventBorrow(self):
+        a=self.list.curselection()
+        print a
+        for i in a:
+            print self.list.get(i)
 g=Gui()
