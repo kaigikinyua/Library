@@ -1,5 +1,3 @@
-####Hello Github
-#####################################################################################3
 from Tkinter import *
 import tkMessageBox
 from lib_dbase import *
@@ -43,119 +41,62 @@ class Gui():
 #----mainpage--------------------------------------------------------------------
     def mainpage(self):
         mainpage=Tk()
+        mainpage.configure(bg="lightblue")
         mainpage.title("Library Management System");
-        photo=PhotoImage(file=".//pictures//shellf.png")
+        photo=PhotoImage(file=".//pictures//shellfc.png")
         lphoto=Label(mainpage,image=photo)
-        lphoto.pack(side=RIGHT)
-        menuframe=Frame(mainpage,background="yellow")
-        mUsers=Button(menuframe,text="Users",command=self.userMangementPage)
-        mBooks=Button(menuframe,text="Books",command=self.bookManageMent)
-        borrow=Button(menuframe,text="Borrow",command=self.borrowBook)
-        rBook=Button(menuframe,text="Return")
-        mUsers.pack()
-        mBooks.pack()
-        borrow.pack()
-        rBook.pack()
-        menuframe.pack(side=LEFT)
+        lphoto.pack(side=TOP)
+
+        #Edditing the mainpage
+    #Bottom Frame
+        BottomFrame=Frame(mainpage)
+      #borrow Frame(LEFT)
+        borrowF=Frame(BottomFrame)
+        #userdetails
+        rframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=3)
+        lborrow=Label(rframe,text="Borrow Book")
+        lborrow.pack(side=TOP)
+        luname=Label(rframe,text="Username");lcontact=Label(rframe,text="User Contact");
+        self.Euname=Entry(rframe,width=30);self.Econtact=Entry(rframe,width=30);
+        luname.pack();self.Euname.pack();lcontact.pack();self.Econtact.pack()
+        b=Button(rframe,text="Borrow",bg="lightgreen",fg="white")
+        b.pack(side=BOTTOM)
+        rframe.pack(side=LEFT)
+        ##############
+        #pictures and animation
+        lframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=1)
+        picture=PhotoImage(file=".//pictures//ui.png")
+        lphoto=Label(lframe,image=picture)
+        lphoto.pack()
+        lframe.pack(side=RIGHT)
+
+        borrowF.pack(side=LEFT)
+
+      #return Frame(right)
+        returnFrame=Frame(BottomFrame,highlightbackground="lightgreen",highlightthickness=3)
+        #userDetails
+        lrFrame=Frame(returnFrame)
+        lreturnFrame=Label(lrFrame,text="Return Book")
+        lreturnFrame.pack(side=TOP)
+        luname=Label(lrFrame,text="Username");lbook=Label(lrFrame,text="Book")
+        self.runame=Entry(lrFrame,width=30);self.rbook=Entry(lrFrame,width=30);
+        luname.pack();self.runame.pack();lbook.pack();self.rbook.pack()
+        b2=Button(lrFrame,text="Return",bg="lightgreen",fg="white")
+        b2.pack()
+        lrFrame.pack(side=RIGHT)
+        #annimation and Results
+        rrframe=Frame(returnFrame)
+        image=PhotoImage(file=".//pictures//si.png")
+        limage=Label(rrframe,image=image)
+        limage.pack(side=TOP)
+        rrframe.pack(side=LEFT)
+        returnFrame.pack(side=RIGHT)
+
+        BottomFrame.pack()
         mainpage.mainloop()
 #-----user management page-------------------------------------------------------
 #---add some pictures men that thing is too blank
-    def userMangementPage(self):
-        self.userm=Tk()
-        self.userm.title("LSM--User Management")
-        frame=Frame(self.userm)
-        frameL=Frame(self.userm)
-        addUser=Button(frame,text="ADD User",background="GREEN",command=self.addUser)
-        deleteUser=Button(frame,text="Delete User",background="RED",command=self.deleteUser)
-        lname=Label(frameL,text="Username")
-        lcontact=Label(frameL,text="Contact")
-        lpass=Label(frameL,text="Password")
-        self.name=Entry(frameL,width=30)
-        self.contact=Entry(frameL,width=30)
-        self.password=Entry(frameL,width=30,show="*")
-        addUser.pack(side=RIGHT)
-        deleteUser.pack(side=LEFT)
-        frame.pack(side=BOTTOM)
-        lname.pack()
-        self.name.pack()
-        lcontact.pack()
-        self.contact.pack()
-        lpass.pack()
-        self.password.pack()
-        frameL.pack(side=TOP)
-        self.userm.mainloop()
-    #adding a new user params(username,password,contact)
-    def addUser(self):
-        uname=self.name.get()
-        contact=self.contact.get()
-        password=self.password.get()
-        l=LibRecords()
-        r=l.addUser(uname,contact,password)
-        if(r==True):
-            tkMessageBox.showinfo("User Added","User "+uname+" has been Added successfully")
-            self.userm.destroy()
-        else:
-            tkMessageBox.showerror("Failed","Error while adding user\nPlease contact the System admin")
-    #adding a new user params(username,password,contact)
-    def deleteUser(self):
-        uname=self.name.get()
-        contact=self.contact.get()
-        password=self.password.get()
-        l=LibRecords()
-        r=l.deleteUser(uname,contact,password)
-        if(r==True):
-            tkMessageBox.showinfo("Deleted User",uname+" has been deleted")
-        else:
-            tkMessageBox.showerror("Error","Error in deleting "+uname)
-#-------Book management----------------------------------------------------------
-    def bookManageMent(self):
-        bookp=Tk()
-        bookp.title("LMS---Book Management")
-        frame=Frame(bookp)
-        lBook=Label(frame,text="Book Name")
-        lauthor=Label(frame,text="Author Name")
-#!!---category should be a dropdown
-        lcategory=Label(frame,text="Category")
-        lcopies=Label(frame,text="Copies")
-        self.Book=Entry(frame,width=30)
-        self.author=Entry(frame,width=30)
-        self.category=Entry(frame,width=30)
-        self.copies=Entry(frame,width=30)
-        lBook.pack();self.Book.pack()
-        lauthor.pack();self.author.pack()
-        lcategory.pack();self.category.pack()
-        lcopies.pack();self.copies.pack()
-        frame.pack(side=TOP)
-        bFrame=Frame(bookp)
-#!!command------
-        add=Button(bFrame,text="Add",background='green',command=self.addBook)
-        delete=Button(bFrame,text="Delete",background='red',command=self.deleteBook)
-        add.pack(side=RIGHT)
-        delete.pack(side=LEFT)
-        bFrame.pack(side=BOTTOM)
-        bookp.mainloop()
-    #method for adding books
-    def addBook(self):
-        l=LibRecords()
-        bookname=self.Book.get();author=self.author.get();category=self.category.get();copies=self.copies.get();
-        r=l.addBook(bookname,author,category,copies)
-        if(r==True):
-            tkMessageBox.showinfo("Entry Sucess","The Book "+bookname+" has been added successfully")
-        else:
-            tkMessageBox.showerror("Error ","There was an Error while adding "+bookname)
-   #deleting a book from the database
-    def deleteBook(self):
-        bookname=self.Book.get();author=self.author.get();category=self.category.get();copies=self.copies.get();
-        l=LibRecords()
-        r=l.deleteBook(bookname,author,category,copies)
-        if(r==True):
-            tkMessageBox.showinfo("Delete success","The Book "+bookname+" has been deleted")
-        elif(r=="Borrowed"):
-            tkMessageBox.showerror("Error","The Book "+bookname+" cannot be deleted\n since it has been borrowed")
-        else:
-            tkMessageBox.showerror("Error","Cannot delete book at this time please contact the system Admin")
-#------Borrow Books ---------------------------------------------------------------
-    def borrowBook(self):
+"""   def borrowBook(self):
         window=Tk()
         window.title("LMS--Borrow Books")
         l=LibRecords()
@@ -179,5 +120,5 @@ class Gui():
         a=self.list.curselection()
         print a
         for i in a:
-            print self.list.get(i)
+            print self.list.get(i)"""
 g=Gui()
