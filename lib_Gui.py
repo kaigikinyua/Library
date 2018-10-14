@@ -3,7 +3,7 @@ import tkMessageBox
 from lib_dbase import *
 from PIL import Image,ImageTk
 class Gui():
-#-----admin login-----------------------------------------------------------------
+#-----admin login-------------------------------------------------------------------------
     def __init__(self):
         self.root=Tk()
         self.root.title("Library Management System ")
@@ -38,7 +38,7 @@ class Gui():
             self.mainpage();
         else:
             tkMessageBox.showwarning("Acess Denied","Wrong Username or Password")
-#----mainpage--------------------------------------------------------------------
+#----mainpage------------------------------------------------------------------------------
     def mainpage(self):
         mainpage=Tk()
         mainpage.configure(bg="lightblue")
@@ -59,12 +59,26 @@ class Gui():
         luname=Label(rframe,text="Username");lcontact=Label(rframe,text="User Contact");
         self.Euname=Entry(rframe,width=30);self.Econtact=Entry(rframe,width=30);
         luname.pack();self.Euname.pack();lcontact.pack();self.Econtact.pack()
-        b=Button(rframe,text="Borrow",bg="lightgreen",fg="white")
+
+
+        #dispalys books that are p_available
+        books=[];i=0;l=LibRecords();
+        r=l.displayBooks()
+        for item in range(len(r)):
+            books+=[r[i][0]+" - "+r[i][1]+" - "+r[i][2]+" - "+r[i][3]]
+            i+=1
+        self.bookList=Listbox(rframe,width=60);j=0;
+        for item in books:
+            self.bookList.insert(j,item)
+        self.bookList.pack()
+
+
+        b=Button(rframe,text="Borrow",bg="green",fg="white",command=self.enventBorrow)
         b.pack(side=BOTTOM)
         rframe.pack(side=LEFT)
         ##############
         #pictures and animation
-        lframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=1)
+        lframe=Frame(borrowF,highlightbackground="lightblue",highlightthickness=1)
         picture=PhotoImage(file=".//pictures//ui.png")
         lphoto=Label(lframe,image=picture)
         lphoto.pack()
@@ -73,7 +87,7 @@ class Gui():
         borrowF.pack(side=LEFT)
 
       #return Frame(right)
-        returnFrame=Frame(BottomFrame,highlightbackground="lightgreen",highlightthickness=3)
+        returnFrame=Frame(BottomFrame,highlightbackground="lightblue",highlightthickness=3)
         #userDetails
         lrFrame=Frame(returnFrame)
         lreturnFrame=Label(lrFrame,text="Return Book")
@@ -81,7 +95,7 @@ class Gui():
         luname=Label(lrFrame,text="Username");lbook=Label(lrFrame,text="Book")
         self.runame=Entry(lrFrame,width=30);self.rbook=Entry(lrFrame,width=30);
         luname.pack();self.runame.pack();lbook.pack();self.rbook.pack()
-        b2=Button(lrFrame,text="Return",bg="lightgreen",fg="white")
+        b2=Button(lrFrame,text="Return",bg="green",fg="white")
         b2.pack()
         lrFrame.pack(side=RIGHT)
         #annimation and Results
@@ -94,31 +108,29 @@ class Gui():
 
         BottomFrame.pack()
         mainpage.mainloop()
-#-----user management page-------------------------------------------------------
+#-----user management page-------------------------------------------------------------
 #---add some pictures men that thing is too blank
-"""   def borrowBook(self):
-        window=Tk()
-        window.title("LMS--Borrow Books")
-        l=LibRecords()
-        r=l.displayBooks()
-        books=[];i=0;
-#display the books the user wants
-#should be easily selectable and added to users wishlist
-#should not be more than 3 books
-        books=[];j=0;
-        for item in range(len(r)):
-            books+=[r[j][1]+" "+r[j][2]+" "+r[j][3]];j+=1;
-        self.list=Listbox(window);i=0;
-        for item in books:
-            self.list.insert(i,item);i+=1;
-        self.list.pack()
-        mylist=Button(window,text="Borrow",bg="green",command=self.enventBorrow)
-        mylist.pack()
-        window.mainloop()
-    #event handler for the Listbox
+
     def enventBorrow(self):
-        a=self.list.curselection()
-        print a
-        for i in a:
-            print self.list.get(i)"""
+        a=self.bookList.curselection()
+        #add security 1.user shoulnot borrow more than 1 book
+        #user
+        string=self.bookList.get(a);id="";
+        for i in range(7):
+            if (string[i]!='0' and string[i]!='1' and string[i]!='2' and string[i]!='3' and string[i]!='4' and string[i]!='5' and string[i]!='6' and string[i]!='7' and string[i]!='8'):
+                if(string[i]!='9'):
+                    break;
+                else:
+                    id+=string[i]
+            else:
+                id+=string[i]
+        contact=self.Econtact.get()
+        #security breach anyone can borrow a book
+        #write a patch to ensure the contact is a member
+        if(len(contact)!=0):
+            l=LibRecords()
+            l.borrow(id,contact)
+        else:
+            tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
+        #call borrow
 g=Gui()
