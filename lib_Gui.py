@@ -53,7 +53,7 @@ class Gui():
       #borrow Frame(LEFT)
         borrowF=Frame(BottomFrame)
         #userdetails
-        rframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=3)
+        rframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=1)
         lborrow=Label(rframe,text="Borrow Book")
         lborrow.pack(side=TOP)
         luname=Label(rframe,text="Username");lcontact=Label(rframe,text="User Contact");
@@ -86,8 +86,8 @@ class Gui():
 
         borrowF.pack(side=LEFT)
 
-      #return Frame(right)
-        returnFrame=Frame(BottomFrame,highlightbackground="lightblue",highlightthickness=3)
+      #*return Frame(right) have a search engine -- remove the userDetails and add the search engine please :)
+        returnFrame=Frame(BottomFrame,highlightbackground="lightblue",highlightthickness=1)
         #userDetails
         lrFrame=Frame(returnFrame)
         lreturnFrame=Label(lrFrame,text="Return Book")
@@ -95,7 +95,23 @@ class Gui():
         luname=Label(lrFrame,text="Username");lbook=Label(lrFrame,text="Book")
         self.runame=Entry(lrFrame,width=30);self.rbook=Entry(lrFrame,width=30);
         luname.pack();self.runame.pack();lbook.pack();self.rbook.pack()
+
+
+        l=LibRecords()
+        r=l.displayBorrowed();borrowed=[];e=0;
+        for item in range(len(r)):
+            borrowed+=[r[e][0]+" "+r[e][1]+" "+str(r[e][2])]
+            e+=1
+        self.borrowed=Listbox(lrFrame,width=30);q=0;
+        for item in borrowed:
+                self.borrowed.insert(j,item)
+                q+=1
+        self.borrowed.pack()
+
         b2=Button(lrFrame,text="Return",bg="green",fg="white")
+    #add a command for the return should have a security check if the record is true ,
+    #update the Inventory records
+    #check for penalties
         b2.pack()
         lrFrame.pack(side=RIGHT)
         #annimation and Results
@@ -108,13 +124,11 @@ class Gui():
 
         BottomFrame.pack()
         mainpage.mainloop()
-#-----user management page-------------------------------------------------------------
-#---add some pictures men that thing is too blank
 
+#eventhandler for the borrow button-------------------------------------------------------------
     def enventBorrow(self):
         a=self.bookList.curselection()
         #add security 1.user shoulnot borrow more than 1 book
-        #user
         string=self.bookList.get(a);id="";
         for i in range(7):
             if (string[i]!='0' and string[i]!='1' and string[i]!='2' and string[i]!='3' and string[i]!='4' and string[i]!='5' and string[i]!='6' and string[i]!='7' and string[i]!='8'):
@@ -125,12 +139,10 @@ class Gui():
             else:
                 id+=string[i]
         contact=self.Econtact.get()
-        #security breach anyone can borrow a book
-        #write a patch to ensure the contact is a member
+    #*write a patch to ensure the contact is a member
         if(len(contact)!=0):
             l=LibRecords()
             l.borrow(id,contact)
         else:
             tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
-        #call borrow
 g=Gui()

@@ -81,6 +81,15 @@ class LibRecords:
         cursor.execute(sql)
         r=cursor.fetchall()
         return r
+    def displayBorrowed(self):
+        cursor=self.db.cursor()
+        sql="SELECT * FROM BorrowedBooks"
+        cursor.execute(sql)
+        r=cursor.fetchall()
+        if(len(r)!=0):
+            return r
+        else:
+            return False
     #--------------------------------Borrowing management----------------------------------------
     #1.borrowing books params(idofthebook,userscontact,password,dateborrowed,state)
     def borrow(self,id,contact):
@@ -141,6 +150,10 @@ class LibRecords:
             return True
         else:
             return False
+#-------sequrity patches -----
+    #patch for borrowing books
+    def s_borrow(self):
+
 #l=LibRecords();
 #l.addUser();
 #l.deleteUser();
