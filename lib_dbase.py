@@ -122,15 +122,30 @@ class LibRecords:
             print "Error Borrowing Book"
 
     #2.returnig the book params (bookid,username,password,dateofreturn)
-    def BookReturn(self):
+    def BookReturn(self,bookid,contact):
             #athenticate(usercontact,password);
         try:
-            sql="SELECT * FROM BorrowedBooks where id='jkshdf'"
+            sql="SELECT * FROM BorrowedBooks where id='%s' and name='%s'"%(bookid,contact)
             cursor=self.db.cursor();
             cursor.execute(sql);
             r=cursor.fetchall()
-            if(len(r)!=0):
+            if(len(r)>0):
                 print "Yes the record exist"
+                if(len(r)>1):
+                    print "Error too many records that are the same"
+                else:
+                    sql1="DELETE FROM BorrowedBooks where id='%s' and name='%s'"%(bookid,contact)
+                    cursor.execute(sql1)
+                    self.db.commit()
+                    sql2="SELECT CopiesAvailable FROM Inventory where id='%s'"%(bookid)
+                    cursor.execute(sql2)
+                    c=cursor.fetchall()
+                    d=c[0][0]+1
+                    print c[0][0]
+    #patch for checking copiesavailable !> than copiesbought
+                    sql3="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(d,bookid)
+                    cursor.execute(sql3)
+                    self.db.commit()
             else:
                 print "There is no borrowed book by such details"
         except():
@@ -152,8 +167,7 @@ class LibRecords:
             return False
 #-------sequrity patches -----
     #patch for borrowing books
-    def s_borrow(self):
-
+    #def s_borrow(self):
 #l=LibRecords();
 #l.addUser();
 #l.deleteUser();

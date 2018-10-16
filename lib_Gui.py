@@ -86,15 +86,17 @@ class Gui():
 
         borrowF.pack(side=LEFT)
 
-      #*return Frame(right) have a search engine -- remove the userDetails and add the search engine please :)
+      #*return Frame(right) have a search engine -- remove the userDetails and add the search engine please
         returnFrame=Frame(BottomFrame,highlightbackground="lightblue",highlightthickness=1)
         #userDetails
         lrFrame=Frame(returnFrame)
         lreturnFrame=Label(lrFrame,text="Return Book")
         lreturnFrame.pack(side=TOP)
-        luname=Label(lrFrame,text="Username");lbook=Label(lrFrame,text="Book")
-        self.runame=Entry(lrFrame,width=30);self.rbook=Entry(lrFrame,width=30);
-        luname.pack();self.runame.pack();lbook.pack();self.rbook.pack()
+        search=Label(lrFrame,text="Search Record By user contact");
+        self.search=Entry(lrFrame,width=30);
+        searchButton=Button(lrFrame,bg="blue",text="Search")
+    #add a command for search
+        search.pack();self.search.pack();searchButton.pack()
 
 
         l=LibRecords()
@@ -108,8 +110,8 @@ class Gui():
                 q+=1
         self.borrowed.pack()
 
-        b2=Button(lrFrame,text="Return",bg="green",fg="white")
-    #add a command for the return should have a security check if the record is true ,
+        b2=Button(lrFrame,text="Return",bg="green",fg="white",command=self.returnBook)
+    #add a command for the return should have a security check if the record is true
     #update the Inventory records
     #check for penalties
         b2.pack()
@@ -145,4 +147,17 @@ class Gui():
             l.borrow(id,contact)
         else:
             tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
+    def returnBook(self):
+        a=self.borrowed.curselection()
+        details=[];b="";
+        for i in self.borrowed.get(a):
+            if (i!=" " and i!="\n"):
+                b+=i
+            else:
+                details+=[b]
+                b=""
+        for item in details:
+            print item
+        l=LibRecords()
+        l.BookReturn(details[0],details[1])    
 g=Gui()
