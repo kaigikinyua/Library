@@ -102,7 +102,6 @@ class LibRecords:
             p_available=cursor.fetchall()
             #check if the books are available at the time if not available notify the user he/she cannot borrow them
             if(p_available[0][0]!=0):
-
                 #getting the current date
                 d=datetime.datetime.now();
                 date=str(d.year)+"-"+str(d.month)+"-"+str(d.day);
@@ -116,10 +115,11 @@ class LibRecords:
                 sql2="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(available,id);
                 cursor.execute(sql2);
                 self.db.commit()
+                return True
             else:
-                print "The book is not available at this time "+str(p_available[0][0])
+                return "Not available"
         except():
-            print "Error Borrowing Book"
+            return False
 
     #2.returnig the book params (bookid,username,password,dateofreturn)
     def BookReturn(self,bookid,contact):
@@ -133,6 +133,7 @@ class LibRecords:
                 print "Yes the record exist"
                 if(len(r)>1):
                     print "Error too many records that are the same"
+                    return "Too many records"
                 else:
                     sql1="DELETE FROM BorrowedBooks where id='%s' and name='%s'"%(bookid,contact)
                     cursor.execute(sql1)
@@ -146,10 +147,11 @@ class LibRecords:
                     sql3="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(d,bookid)
                     cursor.execute(sql3)
                     self.db.commit()
+                    return True
             else:
-                print "There is no borrowed book by such details"
+                return "No record"
         except():
-            print "Error returnig Book"
+            return False
 
 
 

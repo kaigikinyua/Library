@@ -144,9 +144,16 @@ class Gui():
     #*write a patch to ensure the contact is a member
         if(len(contact)!=0):
             l=LibRecords()
-            l.borrow(id,contact)
+            r=l.borrow(id,contact)
         else:
             tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
+        if(r==True):
+            tkMessageBox.showinfo("Sucess","The user by the contact\n"+contact+" has borrowed the book by the id\n"+id)
+        elif(r==False):
+            tkMessageBox.showerror("Error","Please contact your system admin")
+        else:
+            tkMessageBox.showwarning("Book Not available","The book is not available at this time")
+    #resoponse
     def returnBook(self):
         a=self.borrowed.curselection()
         details=[];b="";
@@ -159,5 +166,14 @@ class Gui():
         for item in details:
             print item
         l=LibRecords()
-        l.BookReturn(details[0],details[1])    
+        r=l.BookReturn(details[0],details[1])
+        #error handling
+        if(r==True):
+            tkMessageBox.showinfo("Success","Sucessfully Returned the book\n"+details[1]+"\nwith contact details\n"+details[0])
+        elif(r=="Too many records"):
+            tkMessageBox.showwarning("Too Many Records","There are more than one of such records")
+        elif(r=="No records"):
+            tkMessageBox.showwarning("No details","No such records in the database")
+        else:
+            tkMessageBox.showerror("Unrecoverable Error","Please Contact the system admin")
 g=Gui()
