@@ -86,15 +86,17 @@ class Gui():
 
         borrowF.pack(side=LEFT)
 
-      #*return Frame(right) have a search engine -- remove the userDetails and add the search engine please :)
+      #*return Frame(right) have a search engine -- remove the userDetails and add the search engine please
         returnFrame=Frame(BottomFrame,highlightbackground="lightblue",highlightthickness=1)
         #userDetails
         lrFrame=Frame(returnFrame)
         lreturnFrame=Label(lrFrame,text="Return Book")
         lreturnFrame.pack(side=TOP)
-        luname=Label(lrFrame,text="Username");lbook=Label(lrFrame,text="Book")
-        self.runame=Entry(lrFrame,width=30);self.rbook=Entry(lrFrame,width=30);
-        luname.pack();self.runame.pack();lbook.pack();self.rbook.pack()
+        search=Label(lrFrame,text="Search Record By user contact");
+        self.search=Entry(lrFrame,width=30);
+        searchButton=Button(lrFrame,bg="blue",text="Search")
+    #add a command for search
+        search.pack();self.search.pack();searchButton.pack()
 
 
         l=LibRecords()
@@ -108,8 +110,8 @@ class Gui():
                 q+=1
         self.borrowed.pack()
 
-        b2=Button(lrFrame,text="Return",bg="green",fg="white")
-    #add a command for the return should have a security check if the record is true ,
+        b2=Button(lrFrame,text="Return",bg="green",fg="white",command=self.returnBook)
+    #add a command for the return should have a security check if the record is true
     #update the Inventory records
     #check for penalties
         b2.pack()
@@ -142,7 +144,36 @@ class Gui():
     #*write a patch to ensure the contact is a member
         if(len(contact)!=0):
             l=LibRecords()
-            l.borrow(id,contact)
+            r=l.borrow(id,contact)
         else:
             tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
+        if(r==True):
+            tkMessageBox.showinfo("Sucess","The user by the contact\n"+contact+" has borrowed the book by the id\n"+id)
+        elif(r==False):
+            tkMessageBox.showerror("Error","Please contact your system admin")
+        else:
+            tkMessageBox.showwarning("Book Not available","The book is not available at this time")
+    #resoponse
+    def returnBook(self):
+        a=self.borrowed.curselection()
+        details=[];b="";
+        for i in self.borrowed.get(a):
+            if (i!=" " and i!="\n"):
+                b+=i
+            else:
+                details+=[b]
+                b=""
+        for item in details:
+            print item
+        l=LibRecords()
+        r=l.BookReturn(details[0],details[1])
+        #error handling
+        if(r==True):
+            tkMessageBox.showinfo("Success","Sucessfully Returned the book\n"+details[1]+"\nwith contact details\n"+details[0])
+        elif(r=="Too many records"):
+            tkMessageBox.showwarning("Too Many Records","There are more than one of such records")
+        elif(r=="No records"):
+            tkMessageBox.showwarning("No details","No such records in the database")
+        else:
+            tkMessageBox.showerror("Unrecoverable Error","Please Contact the system admin")
 g=Gui()
