@@ -11,6 +11,12 @@ class LibRecords:
 
     #-------------------------------user management--------------------------------
     #1.adding a new user params(username,contact,password,accountbalance)
+    def dispalyUsers(self):
+        cursor=self.db.cursor()
+        sql="SELECT * FROM users"
+        cursor.execute(sql)
+        r=cursor.fetchall()
+        return r
     def addUser(self,uname,contact,password):
         #athenticate(usercontact,password);
         try:

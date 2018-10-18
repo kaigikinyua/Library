@@ -125,6 +125,16 @@ class Gui():
         returnFrame.pack(side=RIGHT)
 
         BottomFrame.pack()
+        #lib _ records
+
+        managementFrame=Frame(mainpage)
+        lManagement=Label(managementFrame,text="Management")
+        lManagement.pack()
+        borrowedRecords=Button(managementFrame,text="Users",bg="red",fg="white",command=self.borrowedRecords)
+        borrowedRecords.pack(side=LEFT)
+        Inventory=Button(managementFrame,text="Books",bg="red",fg="white")
+        Inventory.pack(side=RIGHT)
+        managementFrame.pack()
         mainpage.mainloop()
 
 #eventhandler for the borrow button-------------------------------------------------------------
@@ -176,4 +186,25 @@ class Gui():
             tkMessageBox.showwarning("No details","No such records in the database")
         else:
             tkMessageBox.showerror("Unrecoverable Error","Please Contact the system admin")
+    def borrowedRecords(self):
+        bor=Tk()
+        bor.title("User management")
+        main=Frame(bor)
+        bor=Frame(main)
+        l1=Label(bor,text="Users")
+        l1.pack()
+        self.borrowedList=Listbox()
+        l=LibRecords()
+        r=l.dispalyUsers()
+        users=[]
+        for i in range(len(r)):
+            users+=[r[i][0]+" "+r[i][1]+" "+r[i][2]]
+        j=0
+        for item in users:
+            self.borrowedList.insert(j,item)
+            j+=1
+        self.borrowedList.pack()
+        main.pack()
+        bor.mainloop()
+    #* add delete,insert funtionalities
 g=Gui()
