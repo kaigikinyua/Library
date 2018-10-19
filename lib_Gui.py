@@ -187,24 +187,70 @@ class Gui():
         else:
             tkMessageBox.showerror("Unrecoverable Error","Please Contact the system admin")
     def borrowedRecords(self):
-        bor=Tk()
-        bor.title("User management")
-        main=Frame(bor)
+        self.bor=Tk()
+        self.bor.title("User management")
+        main=Frame(self.bor)
         bor=Frame(main)
-        l1=Label(bor,text="Users")
+        l1=Label(self.bor,text="Users")
         l1.pack()
-        self.borrowedList=Listbox()
+        self.borrowedList=Listbox(self.bor,width=50)
         l=LibRecords()
         r=l.dispalyUsers()
-        users=[]
-        for i in range(len(r)):
-            users+=[r[i][0]+" "+r[i][1]+" "+r[i][2]]
+        users=[];i=0;
+        for e in range(len(r)):
+            users+=[r[i][0]+" "+r[i][1]]
+            i+=1
         j=0
         for item in users:
             self.borrowedList.insert(j,item)
             j+=1
         self.borrowedList.pack()
+
+        ldelete=Label(main,text="Delete User")
+        ldelete.pack()
+    #add funtionalities to delete
+        bDelete=Button(main,text="Delete",fg="white",bg="red",command=self.deleteUser)
+        bDelete.pack()
+        l2=Label(main,text="Add a user")
+        l2.pack()
+        luname=Label(main,text="Username")
+        luname.pack()
+        self.user=Entry(main,width=30)
+        self.user.pack()
+        lcontact=Label(main,text="Contact")
+        lcontact.pack()
+        self.con=Entry(main,width=30)
+        self.con.pack()
+        lp=Label(main,text="Password")
+        self.password=Entry(main,width=30,show="%")
+        lpc=Label(main,text="Confirm Password")
+        self.lpc=Entry(main,width=30,show="%")
+        lpc.pack()
+        self.lpc.pack()
+        lp.pack()
+        self.password.pack()
+        button=Button(main,bg="green",text="Add",fg="white",command=self.addUser)
+        button.pack()
         main.pack()
-        bor.mainloop()
+        self.bor.mainloop()
     #* add delete,insert funtionalities
+    def addUser(self):
+        uname=self.user.get()
+        contact=self.con.get()
+        password=self.password.get()
+        lcon=self.lpc.get()
+        if(lcon==password):
+            if(len(uname)!=0 and len(contact)!=0 and len(password)!=0):
+                l=LibRecords()
+                r=l.addUser(uname,contact,password)
+                if(r==True):
+                    tkMessageBox.showinfo("Sucess","User "+uname+" has been added sucessfully")
+                else:
+                    tkMessageBox.showerror("Error ","Error in adding the user "+uname+"\nplease contact the system admin")
+            else:
+                tkMessageBox.showerror("Empty Fields","Please Fill in all the Fields")
+        else:
+            tkMessageBox.showwarning("Unmatching passwords","The passwords do not match \n Please Enter matching passwords")
+    def deleteUser(self):
+        print "Deleted"
 g=Gui()
