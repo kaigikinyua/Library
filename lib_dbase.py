@@ -21,20 +21,34 @@ class LibRecords:
         #athenticate(usercontact,password);
         try:
             cursor=self.db.cursor()
-            sql="INSERT INTO users (name,contact,password,account) VALUES ('%s','%s','%s',1000)"%(uname,contact,password);
-            cursor.execute(sql);
-            self.db.commit()
-            return True
+            sql0="SELECT * FROM users where contact='%s'"%(contact)
+            cursor.execute(sql0)
+            r=cursor.fetchall()
+            if(len(r)==0):
+                sql="INSERT INTO users (name,contact,password,account) VALUES ('%s','%s','%s',1000)"%(uname,contact,password);
+                cursor.execute(sql);
+                self.db.commit()
+                return True
+            else:
+                return "Exist"
         except ():
             return False
     #2.Deleting a users params (contact)
-    def deleteUser(self,uname,contact,password):
+    def deleteUser(self,uname,contact):
         try:
             cursor=self.db.cursor()
-            sql="DELETE FROM users where contact='%s' and password='%s'"%(contact,password)
-            cursor.execute(sql)
-            self.db.commit()
-            return True
+            sql0="SELECT * FROM users where name='%s' and contact='%s'"%(uname,contact)
+            cursor.execute(sql0)
+            r=cursor.fetchall()
+            if(len(r)>1):
+                return "Many"
+            elif(len(r)==0):
+                return "None"
+            else:
+                sql="DELETE FROM users where name='%s' and contact='%s'"%(uname,contact)
+                cursor.execute(sql)
+                self.db.commit()
+                return True
         except():
             return False
 
