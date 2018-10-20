@@ -245,6 +245,8 @@ class Gui():
                 r=l.addUser(uname,contact,password)
                 if(r==True):
                     tkMessageBox.showinfo("Sucess","User "+uname+" has been added sucessfully")
+                elif(r=="Exist"):
+                    tkMessageBox.showinfo("Existing user","There is a user already existing by the details\n"+uname+"\n"+contact)
                 else:
                     tkMessageBox.showerror("Error ","Error in adding the user "+uname+"\nplease contact the system admin")
             else:
@@ -252,5 +254,23 @@ class Gui():
         else:
             tkMessageBox.showwarning("Unmatching passwords","The passwords do not match \n Please Enter matching passwords")
     def deleteUser(self):
-        print "Deleted"
+        a=self.borrowedList.curselection();details=[];b="";
+        d=self.borrowedList.get(a)
+        for i in d:
+            if(i!=" " and i!="\n"):
+                b+=i
+            else:
+                details+=[b]
+                b=""
+        details+=[b]
+        l=LibRecords()
+        r=l.deleteUser(details[0],details[1])
+        if(r==True):
+            tkMessageBox.showinfo("Success","User "+details[0]+" deleted sucessfully")
+        elif(r=="None"):
+            tkMessageBox.showerror("Error","No user by the name\n"+details[0]+"\n and contact\n"+details[1])
+        elif(r=="Many"):
+            tkMessageBox.showerror("Many Users by the name \n"+details[0]+"\nand Contact\n"+details[1])
+        else:
+            tkMessageBox.showerror("Error","Please Contact the system admin")
 g=Gui()
