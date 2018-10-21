@@ -132,7 +132,7 @@ class Gui():
         lManagement.pack()
         borrowedRecords=Button(managementFrame,text="Users",bg="red",fg="white",command=self.borrowedRecords)
         borrowedRecords.pack(side=LEFT)
-        Inventory=Button(managementFrame,text="Books",bg="red",fg="white")
+        Inventory=Button(managementFrame,text="Books",bg="red",fg="white",command=self.bookRecords)
         Inventory.pack(side=RIGHT)
         managementFrame.pack()
         mainpage.mainloop()
@@ -151,7 +151,7 @@ class Gui():
             else:
                 id+=string[i]
         contact=self.Econtact.get()
-    #*write a patch to ensure the contact is a member
+        #*write a patch to ensure the contact is a member
         if(len(contact)!=0):
             l=LibRecords()
             r=l.borrow(id,contact)
@@ -208,7 +208,7 @@ class Gui():
 
         ldelete=Label(main,text="Delete User")
         ldelete.pack()
-    #add funtionalities to delete
+        #add funtionalities to delete
         bDelete=Button(main,text="Delete",fg="white",bg="red",command=self.deleteUser)
         bDelete.pack()
         l2=Label(main,text="Add a user")
@@ -273,4 +273,46 @@ class Gui():
             tkMessageBox.showerror("Many Users by the name \n"+details[0]+"\nand Contact\n"+details[1])
         else:
             tkMessageBox.showerror("Error","Please Contact the system admin")
+    def bookRecords(self):
+        bGui=Tk()
+        bGui.title("Book Records")
+        mFrame=Frame(bGui)
+        bookList=Listbox(mFrame,width=70)
+        bList=[];i=0;
+        l=LibRecords()
+        r=l.displayInventory()
+        for item in r:
+            bookList.insert(i,item)
+            i+=1
+        bookList.pack()
+        addBookF=Frame(mFrame)
+        task=Label(addBookF,text="Add A Book",fg="red")
+        task.pack()
+        self.bookname=Entry(addBookF,width=30);l1=Label(addBookF,text="Book Name");
+        self.author=Entry(addBookF,width=30);l2=Label(addBookF,text="Author");
+        self.category=Entry(addBookF,width=30);l3=Label(addBookF,text="Category");
+        self.copiesbought=Entry(addBookF,width=30);l4=Label(addBookF,text="Copies");
+        l1.pack();self.bookname.pack();
+        l2.pack();self.author.pack();
+        l3.pack();self.category.pack();
+        l4.pack();self.copiesbought.pack();
+        add=Button(addBookF,text="Add",fg="white",bg="green",command=self.addBook)
+        add.pack()
+        addBookF.pack()
+        mFrame.pack()
+        bGui.mainloop()
+    def addBook(self):
+        bookName=self.bookname.get()
+        author=self.author.get()
+        category=self.category.get()
+        copies=self.copiesbought.get()
+        if(len(bookName)<1 or len(author)<1 or len(category)<1 or len(copies)<1):
+            tkMessageBox.showwarning("Missing details","Please Fill in all the details")
+        else:
+            l=LibRecords()
+            r=l.addBook(bookName,author,category,copies)
+            if(r==True):
+                tkMessageBox.showinfo("Sucess","Sucessfully added the book "+bookName)
+            else:
+                tkMessageBox.showerror("Error","Please Contact your system administrator")
 g=Gui()
