@@ -101,6 +101,14 @@ class LibRecords:
         cursor.execute(sql)
         r=cursor.fetchall()
         return r
+
+    def displayInventory(self):
+        cursor=self.db.cursor()
+        sql="SELECT * FROM Inventory"
+        cursor.execute(sql)
+        r=cursor.fetchall()
+        return r
+
     def displayBorrowed(self):
         cursor=self.db.cursor()
         sql="SELECT * FROM BorrowedBooks"
