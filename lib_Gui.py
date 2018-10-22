@@ -48,9 +48,9 @@ class Gui():
         lphoto.pack(side=TOP)
 
         #Edditing the mainpage
-    #Bottom Frame
+        #Bottom Frame
         BottomFrame=Frame(mainpage)
-      #borrow Frame(LEFT)
+        #borrow Frame(LEFT)
         borrowF=Frame(BottomFrame)
         #userdetails
         rframe=Frame(borrowF,highlightbackground="lightgreen",highlightthickness=1)
@@ -95,7 +95,7 @@ class Gui():
         search=Label(lrFrame,text="Search Record By user contact");
         self.search=Entry(lrFrame,width=30);
         searchButton=Button(lrFrame,bg="blue",text="Search")
-    #add a command for search
+        #add a command for search
         search.pack();self.search.pack();searchButton.pack()
 
 
@@ -111,7 +111,7 @@ class Gui():
         self.borrowed.pack()
 
         b2=Button(lrFrame,text="Return",bg="green",fg="white",command=self.returnBook)
-    #add a command for the return should have a security check if the record is true
+        #add a command for the return should have a security check if the record is true
     #update the Inventory records
     #check for penalties
         b2.pack()
@@ -277,14 +277,16 @@ class Gui():
         bGui=Tk()
         bGui.title("Book Records")
         mFrame=Frame(bGui)
-        bookList=Listbox(mFrame,width=70)
+        self.bookList=Listbox(mFrame,width=70)
         bList=[];i=0;
         l=LibRecords()
         r=l.displayInventory()
         for item in r:
-            bookList.insert(i,item)
+            self.bookList.insert(i,item)
             i+=1
-        bookList.pack()
+        self.bookList.pack()
+        delete=Button(bGui,text="Delete Book",bg="red",fg="white",command=self.deleteBook)
+        delete.pack()
         addBookF=Frame(mFrame)
         task=Label(addBookF,text="Add A Book",fg="red")
         task.pack()
@@ -315,4 +317,14 @@ class Gui():
                 tkMessageBox.showinfo("Sucess","Sucessfully added the book "+bookName)
             else:
                 tkMessageBox.showerror("Error","Please Contact your system administrator")
+    def deleteBook(self):
+        confirm=Tk()
+        l=Label(confirm,text="Administrator Password");
+        l.pack()
+        password=Entry(confirm,width=30)
+        password.pack()
+        b1=Button(confirm,text="Enter")
+        #a=self.bookList.curselection()
+        #print self.bookList.get(a)
+        confirm.mainloop()
 g=Gui()
