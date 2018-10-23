@@ -318,13 +318,31 @@ class Gui():
             else:
                 tkMessageBox.showerror("Error","Please Contact your system administrator")
     def deleteBook(self):
-        confirm=Tk()
-        l=Label(confirm,text="Administrator Password");
+        self.confirm=Tk()
+        l=Label(self.confirm,text="Administrator Password");
+        l1=Label(self.confirm,text="Administrator Name");
+        l1.pack()
+        self.name=Entry(self.confirm,width=30)
+        self.name.pack()
         l.pack()
-        password=Entry(confirm,width=30)
-        password.pack()
-        b1=Button(confirm,text="Enter")
+        self.password=Entry(self.confirm,width=30)
+        self.password.pack()
+        b1=Button(self.confirm,text="Enter",command=self.execute)
+        b1.pack()
         #a=self.bookList.curselection()
         #print self.bookList.get(a)
-        confirm.mainloop()
+        self.confirm.mainloop()
+    def execute(self):
+        name=self.name.get();
+        password=self.password.get();
+        l=LibRecords()
+        r=l.adminDetails(name,password)
+        if(r==True):
+            a=self.bookList.curselection()
+            j=self.bookList.get(a)
+            print j[0]
+            deleteBook(bookname,author,category,copies)
+            self.confirm.destroy()
+        else:
+            tkMessageBox.showerror("Access Denied","Please Enter the correct Admin Details")
 g=Gui()
