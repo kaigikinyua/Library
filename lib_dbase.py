@@ -79,21 +79,27 @@ class LibRecords:
     #2.Deleting books
 #little logical bug-------------------
     #delete a certain book from the database
-    def deleteBook(self,bookname,author,category,copies):
+    def deleteBook(self,id,bookname,author,category):
         try:
             cursor=self.db.cursor()
-            check="SELECT Copiesbought,CopiesAvailable from Inventory where bookname='%s'"%(bookname)
+            check="SELECT Copiesbought,CopiesAvailable from Inventory where id='%s'"%(id)
             cursor.execute(check)
             r=cursor.fetchall()
-            if(r[0][0]==r[0][1]):
-                sql="DELETE FROM Inventory where bookname='%s' and Author='%s' and Category='%s' and Copiesbought=%d"%(bookname,author,category,int(copies))
+            if(r[0][0]==r[0][1] and len(r)==1):
+                sql="DELETE FROM Inventory where id='%s'"%(id)
                 cursor.execute(sql)
                 self.db.commit()
                 return True
-            else:
+            elif(len(r)>1):
+                return "Id"
+            elif(len(r)==0):
+                return "No Book"
+            elif(r[0][0]!=r[0][1]):
                 return "Borrowed"
+            else:
+                return "Error"
         except():
-            print "Error in deleting Book"
+            return False
     #displaying all the books
     def displayBooks(self):
         cursor=self.db.cursor()
@@ -125,27 +131,37 @@ class LibRecords:
         try:
             #getting the number of coppies of available books to check if the book is available
             cursor=self.db.cursor()
-            sql1="SELECT CopiesAvailable FROM Inventory WHERE id='%s'"%(id)
-            cursor.execute(sql1);
-            p_available=cursor.fetchall()
-            #check if the books are available at the time if not available notify the user he/she cannot borrow them
-            if(p_available[0][0]!=0):
-                #getting the current date
-                d=datetime.datetime.now();
-                date=str(d.year)+"-"+str(d.month)+"-"+str(d.day);
-                cursor=self.db.cursor()
-                #adding the record of the borrowed book to table BorrowedBooks
-                sql="INSERT INTO BorrowedBooks (id,name,dateborrowed,state) VALUES('%s','%s','%s','False')"%(id,contact,date);
-                cursor.execute(sql);
-                self.db.commit()
+            sqlC="SELECT * from users where contact='%s'"%(contact)
+            cursor.execute(sqlC)
+            r=cursor.fetchall()
+            if(len(r)==1):
+                sql1="SELECT CopiesAvailable FROM Inventory WHERE id='%s'"%(id)
+                cursor.execute(sql1);
+                p_available=cursor.fetchall()
+                #check if the books are available at the time if not available notify the user he/she cannot borrow them
+                if(p_available[0][0]!=0):
+                    #getting the current date
+                    d=datetime.datetime.now();
+                    date=str(d.year)+"-"+str(d.month)+"-"+str(d.day);
+                    cursor=self.db.cursor()
+                    #adding the record of the borrowed book to table BorrowedBooks
+                    sql="INSERT INTO BorrowedBooks (id,name,dateborrowed,state) VALUES('%s','%s','%s','False')"%(id,contact,date);
+                    cursor.execute(sql);
+                    self.db.commit()
 
-                available=p_available[0][0]-1;
-                sql2="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(available,id);
-                cursor.execute(sql2);
-                self.db.commit()
-                return True
+                    available=p_available[0][0]-1;
+                    sql2="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(available,id);
+                    cursor.execute(sql2);
+                    self.db.commit()
+                    return True
+                else:
+                    return "Not available"
+            elif(len(r)==0):
+                return "No"
+            elif(len(r)>1):
+                return "Many"
             else:
-                return "Not available"
+                False
         except():
             return False
 

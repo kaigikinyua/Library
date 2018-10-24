@@ -155,14 +155,20 @@ class Gui():
         if(len(contact)!=0):
             l=LibRecords()
             r=l.borrow(id,contact)
+            if(r==True):
+                tkMessageBox.showinfo("Sucess","The user by the contact\n"+contact+" has borrowed the book by the id\n"+id)
+            elif(r==False):
+                tkMessageBox.showerror("Error","Please contact your system admin")
+            elif(r=="Many"):
+                tkMessageBox.showerror("Many Users","Many users by the details\n"+contact)
+            elif(r=="No"):
+                tkMessageBox.showerror("No Users","No user by the details \n"+contact)
+            elif(r=="Not available"):
+                tkMessageBox.showwarning("Book Not available","The book is not available at this time")
+            else:
+                tkMessageBox.showerror("Error","Please contact your system admin")
         else:
             tkMessageBox.showerror("Empty Fields","Enter the username and Contact");
-        if(r==True):
-            tkMessageBox.showinfo("Sucess","The user by the contact\n"+contact+" has borrowed the book by the id\n"+id)
-        elif(r==False):
-            tkMessageBox.showerror("Error","Please contact your system admin")
-        else:
-            tkMessageBox.showwarning("Book Not available","The book is not available at this time")
     #resoponse
     def returnBook(self):
         a=self.borrowed.curselection()
@@ -340,8 +346,20 @@ class Gui():
         if(r==True):
             a=self.bookList.curselection()
             j=self.bookList.get(a)
-            print j[0]
-            deleteBook(bookname,author,category,copies)
+            l=LibRecords()
+            r=l.deleteBook(j[0],j[1],j[2],j[3])
+            if(r==True):
+                tkMessageBox.showinfo("Done","Book "+j[1]+" Deleted")
+            elif(r==False):
+                tkMessageBox.showerror("Error","Please Contact the system Admin")
+            elif(r=="No Book"):
+                tkMessageBox.showerror("Error","No book by details \n"+j)
+            elif(r=="Id"):
+                tkMessageBox.showerror("Error","Many books by the id"+j[0])
+            elif(r=="Borrowed"):
+                tkMessageBox.showerror("Error","Stock Not Complete the book has been borrowed")
+            else:
+                tkMessageBox.showerror("Error","System Error")
             self.confirm.destroy()
         else:
             tkMessageBox.showerror("Access Denied","Please Enter the correct Admin Details")
