@@ -35,7 +35,22 @@
         $contact=$_POST["contact"];
         $password=$_POST["password"];
         if(!empty($contact) and !empty($password)){
-          header("location:user.php");
+          $con=mysqli_connect("localhost","root","root","Library");
+          $sql="SELECT name FROM users where contact='$contact' and password='$password'";
+          $r=mysqli_query($con,$sql);
+          if(mysqli_num_rows($r)==1){
+            session_start();
+            $n=mysqli_fetch_array($r);
+            $user="user";$con="contact";
+            setcookie($user,$n["name"],time()+(86400*30),"/");
+            setcookie($con,$contact,time()+(86400*30),"/");
+            header("location:user.php");
+          }else{
+            print "<center><p class='h4' style='color:red'><i>Wrong contact or password</i></p></center>";  
+          }
+        }
+        else{
+          print "<center><p class='h4' style='color:red'><i>Please Fill in all the Fields</i></p></center>";
         }
       }
     ?>
