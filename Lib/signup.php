@@ -45,9 +45,27 @@
       $passwordc=$_POST["passwordc"];
       $contact=$_POST["contact"];
       if(!empty($uname) and !empty($password) and !empty($passwordc) and !empty($contact)){
-            header("location:login.php");
+        $con=mysqli_connect("localhost","root","root","Library");
+        $sql="SELECT * FROM users where contact='$contact'";
+        $r=mysqli_query($con,$sql);
+        if(mysqli_num_rows($r)==0){
+          if($password==$passwordc){
+            $sql1="INSERT into users(name,contact,password,account) VALUES('$uname','$contact',$password,1000)";
+            $r1=mysqli_query($con,$sql1);
+            if($r1){
+              header("location:login.php");
+            }else{
+              print "<center><p class='h4' style='color:red'><i>Error while adding user please try again later</i></p></center>";
+            }
+          }else{
+            print "<center><p class='h4' style='color:red'><i>Passwords do not match</i></p></center>";
+          }
+        }
+        else{
+          print "<center><p class='h4' style='color:red'><i>The contact is already registered in this site<br/></i></p></center>";
+        }
       }else{
-        print "One field is missing";
+        print "<center><p class='h4' style='color:red'><i>Please Fill in all the Fields</i></p></center>";
       }
     }
     ?>
