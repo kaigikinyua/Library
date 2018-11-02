@@ -1,0 +1,21 @@
+div.slide{ 
+    background: url('images/1.png');
+    height:40%;
+    width:95%;
+    margin:50px auto;
+    animation: slide 30s infinite ease-in-out;
+}
+@keyframes slide{
+    50%{
+        background: url('images/2.png');
+    }100%{
+        background: url('images/1.png');
+    }
+}
+div.article{
+
+}
+div.gallery{
+    box-align: left;
+    background: blue;
+}
