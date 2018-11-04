@@ -174,7 +174,6 @@ class LibRecords:
             cursor.execute(sql);
             r=cursor.fetchall()
             if(len(r)==1):
-
                 Return=datetime.datetime.now()
                 dReturn=datetime.date(Return.year,Return.month,Return.day)
                 sql1="DELETE FROM BorrowedBooks where id='%s' and name='%s'"%(bookid,contact)
@@ -185,20 +184,19 @@ class LibRecords:
                 c=cursor.fetchall()
                 d=c[0][0]+1
                 print c[0][0]
-    #patch for checking copiesavailable !> than copiesbought
+                #patch for checking copiesavailable !> than copiesbought
                 sql3="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(d,bookid)
                 cursor.execute(sql3)
                 self.db.commit()
+                if(dReturn>(r[0][2]+datetime.timedelta(days=3))):
+                    return "Penalty "+str(dReturn-(r[0][2]+datetime.timedelta(days=3)))
                 return True
             elif(len(r)>1):
-                return "Too many records
+                return "Too many records"
             else:
                 return "No record"
         except():
             return False
-
-
-
 #--------------------------admin---------------------------------------------
     #login for admin params(name,password)
     def adminDetails(self,name,password):

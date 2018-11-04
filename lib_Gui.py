@@ -191,7 +191,7 @@ class Gui():
         elif(r=="No records"):
             tkMessageBox.showwarning("No details","No such records in the database")
         else:
-            tkMessageBox.showerror("Unrecoverable Error","Please Contact the system admin")
+            tkMessageBox.showerror("Penalty For overstaying ","User "+details[0]+" has been penalised for overstaying"+r)
     def borrowedRecords(self):
         self.bor=Tk()
         self.bor.title("User management")
