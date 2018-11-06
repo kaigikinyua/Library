@@ -117,7 +117,7 @@ class LibRecords:
 
     def displayBorrowed(self):
         cursor=self.db.cursor()
-        sql="SELECT * FROM BorrowedBooks"
+        sql="SELECT * FROM BorrowedBooks where state=False";
         cursor.execute(sql)
         r=cursor.fetchall()
         if(len(r)!=0):
@@ -176,7 +176,8 @@ class LibRecords:
             if(len(r)==1):
                 Return=datetime.datetime.now()
                 dReturn=datetime.date(Return.year,Return.month,Return.day)
-                sql1="DELETE FROM BorrowedBooks where id='%s' and name='%s'"%(bookid,contact)
+            
+                sql1="UPDATE BorrowedBooks set state='True' where id='%s' and name='%s'"%(bookid,contact)
                 cursor.execute(sql1)
                 self.db.commit()
                 sql2="SELECT CopiesAvailable FROM Inventory where id='%s'"%(bookid)

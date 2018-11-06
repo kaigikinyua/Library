@@ -101,9 +101,12 @@ class Gui():
 
         l=LibRecords()
         r=l.displayBorrowed();borrowed=[];e=0;
-        for item in range(len(r)):
-            borrowed+=[r[e][0]+" "+r[e][1]+" "+str(r[e][2])]
-            e+=1
+        if(r==None):
+            borrowed+=[" "+" "+" "]
+        else:
+            for item in range(len(r)):
+                borrowed+=[r[e][0]+" "+r[e][1]+" "+str(r[e][2])]
+                e+=1
         self.borrowed=Listbox(lrFrame,width=30);q=0;
         for item in borrowed:
                 self.borrowed.insert(j,item)
@@ -191,7 +194,7 @@ class Gui():
         elif(r=="No records"):
             tkMessageBox.showwarning("No details","No such records in the database")
         else:
-            tkMessageBox.showerror("Penalty For overstaying ","User "+details[0]+" has been penalised for overstaying"+r)
+            tkMessageBox.showerror("Overdue","User "+details[1]+" has been penalised for overstaying with the book for \n"+r)
     def borrowedRecords(self):
         self.bor=Tk()
         self.bor.title("User management")
