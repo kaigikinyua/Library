@@ -6,7 +6,8 @@
       header("location:index.html");
     }
     ?>
-    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="Css/mycss.css">
   </head>
   <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -28,49 +29,48 @@
         <h4>Your History</h4>
         <?php
         ?>
-        <table class="table-striped table-hover">
-          <tr style="color:blue"><td>Book Name  .</td><td>Borrowed Date  .</td><td>Retured</td></tr>
+        <table class="table table-striped table-hover" colspan="15px">
+          <tr style="color:blue"><td>Book Name</td><td>Borrowed Date</td><td>Returned</td></tr>
           <?php
-              $con=mysqli_connect("localhost","root","root","Library");
-            $name=$_COOKIE["contact"];
-            $sql="SELECT * FROM BorrowedBooks WHERE name='$name'";
+          $con=mysqli_connect("localhost","root","root","Library");
+          if($con){
+            $contact=$_COOKIE["contact"];
+            $sql="SELECT * FROM BorrowedBooks where name='$contact'";
             $r=mysqli_query($con,$sql);
-            while($r1=mysqli_fetch_array($r)){
-            #book index,user contact,date,retured state
-            $history=array($r1[0],$r1[1],$r1[2],$r1[3]);
-            }
-            $i=0;
-            if(!empty($history)){
-              foreach($history as $values){
-                if($i%4==0){
-                  $bookname="SELECT bookname from Inventory where id='$values'";
-                  $r=mysqli_query($con,$bookname);
-                  while($ans=mysqli_fetch_array($r)){
-                      $bname=$ans[0];
-                  }
+            while($values=mysqli_fetch_array($r)){
+              if($values[3]==False){
+                $bd=strtotime($values[2]);
+                $n=strtotime("now");
+                $an=(($n-$bd)/86400);
+                echo $an;
+                if($ans>0){
+                  echo "<tr bgcolor='red'><td>".$values[1]."</td><td>".$values[2]."</td><td>".$values[3]."</td></tr>";
+                }else{
+                  echo "<tr bgcolor='red'><td>".$values[1]."</td><td>".$values[2]."</td><td>".$values[3]."</td></tr>";
                 }
-                else if($i%4==2){
-                  $date="SELECT dateborrowed from BorrowedBooks where name='$name'";
-                  $d=mysqli_query($con,$date);
-                  while($r=mysqli_fetch_array($d)){
-                    $da=$r[0];
-                  }
-                  $dt=strtotime("now");
-                  $bd=strtotime($da);
-                  $an=($dt-$bd)/86400;
-                  
-                  if($an>14){
-                    echo "<tr bgcolor='#FF407E'><td>".$bname."</td><td>".$da."</td></tr>";
-                  }else{
-                    echo "<tr bgcolor='#499DFF'><td>".$bname."</td><td>".$da."</td></tr>";
-                  }
-                }
-                else{}
-                $i+=1;
+              }else{
+                echo "<tr bgcolor='lightblue'><td>".$values[1]."</td><td>".$values[2]."</td><td>".$values[3]."</td></tr>";
               }
             }
+          }else{
+          #remove this before production
+            echo mysqli_error($con);
+          }
           ?>
         </table>
+      </div>
+      <div class="col-sm-6">
+        <?php
+        $con=mysqli_connect("localhost","root","root","Library");
+        $sql="SELECT * FROM BorrowedBooks where state='False'";
+        $r=mysqli_query($con,$sql);
+        $row=10*mysqli_num_rows($r);
+        echo "Books Not Retured : ".($row/10)."<div class='stats' style='width:".$row."'></div>";
+        $sql="SELECT * FROM BorrowedBooks where state='True'";
+        $r=mysqli_query($con,$sql);
+        $row=10*mysqli_num_rows($r);
+        echo "Books Returned : ".($row/10)."<div class='stats' style='width:".$row."'></div>";
+        ?>
       </div>
       <div class="col-sm-6">
         <!--Books col-->

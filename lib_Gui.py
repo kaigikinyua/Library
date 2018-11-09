@@ -107,7 +107,7 @@ class Gui():
             for item in range(len(r)):
                 borrowed+=[r[e][0]+" "+r[e][1]+" "+str(r[e][2])]
                 e+=1
-        self.borrowed=Listbox(lrFrame,width=30);q=0;
+        self.borrowed=Listbox(lrFrame,width=50);q=0;
         for item in borrowed:
                 self.borrowed.insert(j,item)
                 q+=1
