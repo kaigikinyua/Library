@@ -168,6 +168,8 @@ class Gui():
                 tkMessageBox.showerror("No Users","No user by the details \n"+contact)
             elif(r=="Not available"):
                 tkMessageBox.showwarning("Book Not available","The book is not available at this time")
+            elif(r=="Limit"):
+                tkMessageBox.showwarning("Limit reached ","The user has a reached the limitation")
             else:
                 tkMessageBox.showerror("Error","Please contact your system admin")
         else:

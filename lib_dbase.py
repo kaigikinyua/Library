@@ -134,7 +134,10 @@ class LibRecords:
             sqlC="SELECT * from users where contact='%s'"%(contact)
             cursor.execute(sqlC)
             r=cursor.fetchall()
-            if(len(r)==1):
+            sqlL="SELECT * from BorrowedBooks where name='%s' and state='False'"%(contact)
+            cursor.execute(sqlL)
+            l=cursor.fetchall()
+            if(len(r)==1 and len(l)<3):
                 sql1="SELECT CopiesAvailable FROM Inventory WHERE id='%s'"%(id)
                 cursor.execute(sql1);
                 p_available=cursor.fetchall()
@@ -160,6 +163,8 @@ class LibRecords:
                 return "No"
             elif(len(r)>1):
                 return "Many"
+            elif(len(l)>=3):
+                return "Limit"
             else:
                 False
         except():
