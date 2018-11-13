@@ -5,10 +5,8 @@ class LibRecords:
     def __init__(self):
         try:
             self.db=MySQLdb.connect("localhost","root","root","Library")
-            print "Connection success"
         except():
-            print "Error connecting to the database"
-
+            print "Please Make sure your database is setup properly"
     #-------------------------------user management--------------------------------
     #1.adding a new user params(username,contact,password,accountbalance)
     def dispalyUsers(self):
@@ -117,7 +115,7 @@ class LibRecords:
 
     def displayBorrowed(self):
         cursor=self.db.cursor()
-        sql="SELECT * FROM BorrowedBooks where state=False";
+        sql="SELECT * FROM BorrowedBooks where state='False'";
         cursor.execute(sql)
         r=cursor.fetchall()
         if(len(r)!=0):
