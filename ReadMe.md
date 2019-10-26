@@ -1,5 +1,6 @@
-Library Management System.
-This was a class project assignment that we were suppossed to create a basic software.
+Library Management System
+
+This was a class project assignment that we were suppossed to create a basic software that would assists in a Software design models.
 
 The Library management software I created had an admin console which by the admin had the following capabilities.
   1.Add a stock of books.
