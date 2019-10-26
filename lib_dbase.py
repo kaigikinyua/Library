@@ -1,12 +1,12 @@
-import MySQLdb,datetime,random
+import mysql.connector as MySQLdb,datetime,random
 class LibRecords:
     #---------------------------database Connection----------------------------------
 #constructor that connects to the database
     def __init__(self):
         try:
-            self.db=MySQLdb.connect("localhost","root","root","Library")
+            self.db=MySQLdb.connect(host="localhost",user="root",passwd="",db="Library")
         except():
-            print "Please Make sure your database is setup properly"
+            print ("Please Make sure your database is setup properly")
     #-------------------------------user management--------------------------------
     #1.adding a new user params(username,contact,password,accountbalance)
     def dispalyUsers(self):
@@ -187,7 +187,7 @@ class LibRecords:
                 cursor.execute(sql2)
                 c=cursor.fetchall()
                 d=c[0][0]+1
-                print c[0][0]
+                print (c[0][0])
                 #patch for checking copiesavailable !> than copiesbought
                 sql3="UPDATE Inventory set CopiesAvailable=%d where id='%s'"%(d,bookid)
                 cursor.execute(sql3)

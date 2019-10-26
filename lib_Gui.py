@@ -1,5 +1,5 @@
-from Tkinter import *
-import tkMessageBox
+from tkinter import *
+from tkinter import messagebox as tkMessageBox
 from lib_dbase import *
 from PIL import Image,ImageTk
 class Gui():
@@ -185,7 +185,7 @@ class Gui():
                 details+=[b]
                 b=""
         for item in details:
-            print item
+            print (item)
         l=LibRecords()
         r=l.BookReturn(details[0],details[1])
         #error handling
