@@ -1,7 +1,11 @@
-##installation instructions
-1.Make Sure You have MySQL in your computer
-2.Run the libSetUp
-3.You have sucessfully installed SimpleLibrary
+Library Management System.
+This was a class project assignment that we were suppossed to create a basic software.
 
-Has a website that can enable users to view their 
-borrow history. 
+The Library management software I created had an admin console which by the admin had the following capabilities.
+  1.Add a stock of books.
+  2.See if a book has been borrowed and by whom.
+The person borrowing the book could be able to do the following.
+  1.Login to his or her account on the website.
+  2.See which books he/she has borrowed.
+
+The project used Pyhton for the admin panel and PHP,HTML and CSS for the person borrowing a book.The reason for this type of build was to enhance security to the database since I never wanted to have an admin panel on the site which to me seemed very vulnerable to an attack.
